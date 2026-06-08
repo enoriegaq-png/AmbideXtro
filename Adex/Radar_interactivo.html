@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Radar de Servicio - Transformación ADEX</title>
+    <script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=cJGTxs7mZnkEu7rcsm0ls3OZx76BTeBDalWiCr6BkxHhyv89wv6kKDqjBRbDbucT8_wL6_O7L09SZbaRMx7FImJSqb339Dr14sb_tBhIMvIJIH2H4IMHMdVeaZi_CXNEosbaBGr8L0UKh5_eCtF6e76zG9t2IPSk_bSOCaGWYAEqyiz2jHo42GrCl5buKIxcm7yWoLf2RzeOJJOvwIRYraOwn7FgsKrOVKdBIEbvfzu3kJCZ2tkNb1YNAf_yT0LQHG4-pe8ujIZCCOg_jH2lzsb6co023ArZhCSW9vG9mm41-b60tQ7Dt86PDcKfSCKsD9Gb66obD2ERCSbsMshEEw" charset="UTF-8"></script><style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f4f6f9;
+            color: #333;
+            padding: 20px;
+        }
+
+        /* Header Container */
+        .header {
+            background-color: #0d0e12;
+            color: #ffffff;
+            padding: 15px 25px;
+            border-radius: 8px 8px 0 0;
+            display: table;
+            width: 100%;
+        }
+
+        .header-cell {
+            display: table-cell;
+            vertical-align: middle;
+        }
+
+        .header-left {
+            width: 55%;
+        }
+
+        .header-center {
+            width: 25%;
+            text-align: center;
+            border-left: 1px solid #333;
+            border-right: 1px solid #333;
+            padding: 0 15px;
+        }
+
+        .header-right {
+            width: 20%;
+            text-align: right;
+        }
+
+        .title-container {
+            display: table;
+            width: 100%;
+        }
+
+        .radar-icon {
+            display: table-cell;
+            vertical-align: middle;
+            width: 50px;
+        }
+
+        .title-text {
+            display: table-cell;
+            vertical-align: middle;
+            padding-left: 15px;
+        }
+
+        .title-text h1 {
+            font-size: 11pt;
+            letter-spacing: 1px;
+            color: #b3b3b3;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .title-text h2 {
+            font-size: 18pt;
+            color: #f1c40f;
+            font-weight: 700;
+            margin-top: 2px;
+            letter-spacing: 0.5px;
+        }
+
+        .selector-label {
+            font-size: 9pt;
+            color: #a0a0a0;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .week-select {
+            background-color: #1a1c23;
+            color: #fff;
+            border: 1px solid #444;
+            padding: 8px 12px;
+            font-size: 11pt;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .week-select:focus {
+            border-color: #f1c40f;
+        }
+
+        .logo-text {
+            font-size: 16pt;
+            font-weight: 800;
+            font-style: italic;
+            color: #fff;
+        }
+
+        .logo-sub {
+            font-size: 10pt;
+            color: #f1c40f;
+            display: block;
+            margin-top: -4px;
+            letter-spacing: 2px;
+        }
+
+        /* KPI Bar */
+        .kpi-bar {
+            background-color: #ffffff;
+            padding: 12px 25px;
+            border-bottom: 1px solid #e2e8f0;
+            display: table;
+            width: 100%;
+        }
+
+        .kpi-label {
+            display: table-cell;
+            vertical-align: middle;
+            width: 180px;
+            font-weight: 700;
+            font-size: 10pt;
+            color: #2d3748;
+        }
+
+        .kpi-progress-container {
+            display: table-cell;
+            vertical-align: middle;
+        }
+
+        .progress-track {
+            background-color: #edf2f7;
+            border-radius: 4px;
+            width: 250px;
+            height: 22px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background-color: #10b981;
+            height: 100%;
+            width: 80%;
+            transition: width 0.6s ease-in-out, background-color 0.6s;
+        }
+
+        .progress-text {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            line-height: 22px;
+            font-size: 9.5pt;
+            font-weight: bold;
+            color: #2d3748;
+        }
+
+        /* Dashboard Grid Layout using Table/Rows to be fully robust */
+        .dashboard-grid {
+            display: table;
+            width: 100%;
+            margin-top: 15px;
+            border-collapse: separate;
+            border-spacing: 15px 0;
+        }
+
+        .dashboard-col {
+            display: table-cell;
+            width: 33.333%;
+            vertical-align: top;
+        }
+
+        .card {
+            background-color: #ffffff;
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+            margin-bottom: 15px;
+            border: 1px solid #e2e8f0;
+            overflow: hidden;
+        }
+
+        .card-header {
+            background-color: #0d0e12;
+            color: #ffffff;
+            padding: 12px 15px;
+            display: table;
+            width: 100%;
+        }
+
+        .card-header-icon {
+            display: table-cell;
+            width: 32px;
+            vertical-align: middle;
+            text-align: center;
+        }
+
+        .card-header-text {
+            display: table-cell;
+            vertical-align: middle;
+            padding-left: 10px;
+        }
+
+        .card-header-text h3 {
+            font-size: 10.5pt;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .card-header-text p {
+            font-size: 9pt;
+            color: #a0aec0;
+            margin-top: 2px;
+            font-style: italic;
+        }
+
+        .card-body {
+            padding: 15px;
+        }
+
+        /* Tables style inside cards */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table th {
+            font-size: 8.5pt;
+            font-weight: 700;
+            color: #718096;
+            text-transform: uppercase;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e2e8f0;
+            text-align: left;
+        }
+
+        .data-table th.num { text-align: center; }
+        
+        .data-table td {
+            padding: 10px 0;
+            font-size: 9.5pt;
+            color: #2d3748;
+            border-bottom: 1px dashed #edf2f7;
+            vertical-align: middle;
+        }
+
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .data-table td.num {
+            text-align: center;
+            font-weight: 600;
+            width: 45px;
+        }
+
+        /* Trend Indicators */
+        .trend {
+            font-weight: bold;
+            font-size: 11pt;
+            text-align: center;
+            width: 45px;
+        }
+        .trend.up { color: #10b981; }
+        .trend.side { color: #f59e0b; }
+        .trend.down { color: #ef4444; }
+
+        /* Specific section styling */
+        .section-title {
+            font-size: 9.5pt;
+            font-weight: 700;
+            color: #1a202c;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 5px 0;
+            margin-bottom: 10px;
+            border-bottom: 2px solid #edf2f7;
+        }
+
+        .section-block {
+            margin-bottom: 20px;
+        }
+        .section-block:last-child { margin-bottom: 0; }
+
+        /* Inner Progress Rows */
+        .progress-row {
+            margin-bottom: 12px;
+        }
+        
+        .progress-row-header {
+            display: table;
+            width: 100%;
+            font-size: 9pt;
+            margin-bottom: 4px;
+        }
+
+        .progress-row-title {
+            display: table-cell;
+            font-weight: 600;
+            color: #2d3748;
+        }
+        
+        .progress-row-vals {
+            display: table-cell;
+            text-align: right;
+            font-weight: 700;
+            color: #4a5568;
+            width: 80px;
+        }
+
+        .mini-track {
+            background-color: #edf2f7;
+            height: 12px;
+            border-radius: 3px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .mini-fill {
+            height: 100%;
+            background-color: #10b981;
+            transition: width 0.5s ease-in-out;
+        }
+
+        /* Micro-details breakdown inside cards (hoverable or soft text) */
+        .breakdown-list {
+            list-style: none;
+            padding-left: 12px;
+            margin-top: 4px;
+            border-left: 2px solid #edf2f7;
+        }
+
+        .breakdown-item {
+            font-size: 8.5pt;
+            color: #718096;
+            margin-bottom: 2px;
+            display: table;
+            width: 100%;
+        }
+        .breakdown-name { display: table-cell; }
+        .breakdown-val { display: table-cell; text-align: right; font-weight: 600; width: 30px; }
+
+        /* Traffic light list */
+        .signal-row {
+            display: table;
+            width: 100%;
+            padding: 8px 0;
+            border-bottom: 1px solid #edf2f7;
+        }
+        .signal-row:last-child { border-bottom: none; }
+
+        .signal-light-cell {
+            display: table-cell;
+            width: 30px;
+            vertical-align: middle;
+        }
+
+        .signal-text-cell {
+            display: table-cell;
+            vertical-align: middle;
+            font-size: 9.5pt;
+            color: #2d3748;
+            padding-left: 8px;
+        }
+
+        .signal-status-cell {
+            display: table-cell;
+            vertical-align: middle;
+            text-align: right;
+            font-size: 8.5pt;
+            font-weight: 600;
+            color: #718096;
+            width: 110px;
+        }
+
+        .light-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            display: inline-block;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
+        }
+        .light-dot.green { background-color: #10b981; }
+        .light-dot.amber { background-color: #f59e0b; }
+        .light-dot.red { background-color: #ef4444; }
+
+        /* Bottom Insights Block */
+        .insights-grid {
+            display: table;
+            width: 100%;
+            margin-top: 15px;
+            border-collapse: separate;
+            border-spacing: 15px 0;
+        }
+
+        .insight-card {
+            display: table-cell;
+            width: 33.333%;
+            background-color: #f8fafc;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
+            padding: 15px;
+            vertical-align: top;
+        }
+
+        .insight-title {
+            font-size: 10pt;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+            display: table;
+            width: 100%;
+        }
+
+        .insight-title-icon {
+            display: table-cell;
+            width: 24px;
+            vertical-align: middle;
+        }
+        .insight-title-text {
+            display: table-cell;
+            vertical-align: middle;
+            padding-left: 6px;
+        }
+
+        .insight-card.hallazgos .insight-title { color: #d97706; }
+        .insight-card.riesgos .insight-title { color: #dc2626; }
+        .insight-card.aprendizajes .insight-title { color: #2563eb; }
+
+        .insight-list {
+            padding-left: 18px;
+            margin: 0;
+        }
+
+        .insight-list li {
+            font-size: 9.2pt;
+            color: #334155;
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+        .insight-list li:last-child { margin-bottom: 0; }
+
+        /* Footer */
+        .footer {
+            margin-top: 25px;
+            padding: 12px 0;
+            text-align: left;
+            font-size: 8.5pt;
+            color: #718096;
+            border-top: 1px solid #e2e8f0;
+            font-weight: 600;
+        }
+
+        /* Tooltip style */
+        .tooltip-container {
+            position: relative;
+            cursor: pointer;
+        }
+        .tooltip-container:hover .custom-tooltip {
+            opacity: 1;
+            visibility: visible;
+        }
+        .custom-tooltip {
+            position: absolute;
+            bottom: 130%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #1e293b;
+            color: #fff;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 8pt;
+            white-space: nowrap;
+            z-index: 10;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.2s, visibility 0.2s;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+            font-weight: normal;
+        }
+        .custom-tooltip::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #1e293b transparent transparent transparent;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Main Header -->
+    <div class="header">
+        <div class="header-cell header-left">
+            <div class="title-container">
+                <div class="radar-icon">
+                    <svg width="42" height="42" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="12" cy="12" r="9" stroke="#f1c40f" stroke-width="2"/>
+                        <circle cx="12" cy="12" r="5" stroke="#f1c40f" stroke-width="1.5" stroke-dasharray="2 2"/>
+                        <circle cx="12" cy="12" r="1.5" fill="#f1c40f"/>
+                        <line x1="12" y1="3" x2="12" y2="21" stroke="#f1c40f" stroke-width="1" stroke-opacity="0.4"/>
+                        <line x1="3" y1="12" x2="21" y2="12" stroke="#f1c40f" stroke-width="1" stroke-opacity="0.4"/>
+                        <path d="M12 12L18 6" stroke="#f1c40f" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </div>
+                <div class="title-text">
+                    <h1>Radar del Servicio para la</h1>
+                    <h2>Transformación ADEX</h2>
+                </div>
+            </div>
+        </div>
+        <div class="header-cell header-center">
+            <span class="selector-label">Semana de Reporte</span>
+            <select id="weekSelector" class="week-select" onchange="updateDashboard(this.value)">
+                <option value="w2">Semana del 25 al 29 de Mayo</option>
+                <option value="w1">Semana del 18 al 22 de Mayo</option>
+            </select>
+        </div>
+        <div class="header-cell header-right">
+            <div class="logo-text">X ambi</div>
+            <div class="logo-sub">dextro</div>
+        </div>
+    </div>
+
+    <!-- KPI Highlight Bar -->
+    <div class="kpi-bar">
+        <div class="kpi-label">ESTADO GENERAL DEL SERVICIO:</div>
+        <div class="kpi-progress-container">
+            <div class="progress-track">
+                <div id="generalProgressFill" class="progress-fill" style="width: 80%;"></div>
+                <div id="generalProgressText" class="progress-text">80%</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3-Column Dashboard Grid -->
+    <div class="dashboard-grid">
+        
+        <!-- COLUMN 1: ACTIVACIÓN ORGANIZACIONAL -->
+        <div class="dashboard-col">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-header-icon">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                    </div>
+                    <div class="card-header-text">
+                        <h3>1. Activación Organizacional</h3>
+                        <p>¿Qué nivel de movilización estamos logrando?</p>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Indicador</th>
+                                <th class="num">Sem.</th>
+                                <th class="num">Acum.</th>
+                                <th class="num">Tend.</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableActivacion">
+                            <!-- Injected by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- COLUMN 2: DESPLIEGUE DE MODELO -->
+        <div class="dashboard-col">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-header-icon">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <circle cx="12" cy="12" r="6"></circle>
+                            <circle cx="12" cy="12" r="2"></circle>
+                        </svg>
+                    </div>
+                    <div class="card-header-text">
+                        <h3>2. Despliegue de Modelo de Gestión Adaptativa</h3>
+                        <p>¿Qué estamos dejando instalado?</p>
+                    </div>
+                </div>
+                <div class="card-body">
+                    
+                    <div class="section-block">
+                        <div class="section-title">Instalación del Modelo</div>
+                        
+                        <div id="blockInstalacion">
+                            <!-- Injected by JS -->
+                        </div>
+                    </div>
+
+                    <div class="section-block">
+                        <div class="section-title">Despliegue Estratégico</div>
+                        <div id="blockDespliegue">
+                            <!-- Injected by JS -->
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- COLUMN 3: EVIDENCIAS DE TRANSFORMACIÓN -->
+        <div class="dashboard-col">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-header-icon">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="23 4 12.41 14.59 7.59 9.76 1 16.35"></polyline>
+                            <polyline points="17 4 23 4 23 10"></polyline>
+                        </svg>
+                    </div>
+                    <div class="card-header-text">
+                        <h3>3. Evidencias de Transformación</h3>
+                        <p>¿Qué cambios empiezan a evidenciarse?</p>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Indicador</th>
+                                <th class="num">Sem.</th>
+                                <th class="num">Acum.</th>
+                                <th class="num">Tend.</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableEvidencias">
+                            <!-- Injected by JS -->
+                        </tbody>
+                    </table>
+
+                    <div class="section-block" style="margin-top: 25px;">
+                        <div class="section-title">
+                            <span style="vertical-align: middle;">Señales Ejecutivas</span>
+                        </div>
+                        <div id="blockSeñales">
+                            <!-- Injected by JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Bottom Row Insights Layout -->
+    <div class="insights-grid">
+        
+        <!-- Hallazgos -->
+        <div class="insight-card hallazgos">
+            <div class="insight-title">
+                <div class="insight-title-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="16" x2="12" y2="12"></line>
+                        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                    </svg>
+                </div>
+                <div class="insight-title-text">Hallazgos</div>
+            </div>
+            <ul class="insight-list" id="listHallazgos">
+                <!-- Injected by JS -->
+            </ul>
+        </div>
+
+        <!-- Riesgos -->
+        <div class="insight-card riesgos">
+            <div class="insight-title">
+                <div class="insight-title-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                        <line x1="12" y1="9" x2="12" y2="13"></line>
+                        <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                    </svg>
+                </div>
+                <div class="insight-title-text">Riesgos</div>
+            </div>
+            <ul class="insight-list" id="listRiesgos">
+                <!-- Injected by JS -->
+            </ul>
+        </div>
+
+        <!-- Aprendizajes -->
+        <div class="insight-card aprendizajes">
+            <div class="insight-title">
+                <div class="insight-title-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                    </svg>
+                </div>
+                <div class="insight-title-text">Aprendizajes o Ajustes</div>
+            </div>
+            <ul class="insight-list" id="listAprendizajes">
+                <!-- Injected by JS -->
+            </ul>
+        </div>
+
+    </div>
+
+    <!-- Footer Documental -->
+    <div class="footer">
+        Preparado por Ambidextro
+    </div>
+
+    <script>
+        // Centralized Dataset for multiple reporting weeks
+        const dataset = {
+            w1: {
+                generalProgress: "72%",
+                activacion: [
+                    { name: "Sesiones de alineamiento estratégico con gerencias", sem: 2, acum: 20, tend: "↑" },
+                    { name: "Sesiones del Comité de transformación", sem: 1, acum: 5, tend: "↑" },
+                    { name: "Acompañamientos a sesiones de tribus", sem: 3, acum: 7, tend: "↑" },
+                    { name: "Otras sesiones de articulación", sem: 4, acum: 27, tend: "↑" },
+                    { name: "Gerencias involucradas durante la semana", sem: 4, acum: 4, tend: "→" },
+                    { name: "Workshops/talleres realizados", sem: 0, acum: 1, tend: "→" },
+                    { name: "Personas involucradas en sesiones de trabajo", sem: 15, acum: 37, tend: "↑" }
+                ],
+                instalacion: [
+                    { title: "Entregables concretos (Elementos tangibles desarrollados)", total: 8, advance: 4, pct: "50%", done: 0, build: 4, pend: 4 },
+                    { title: "Capacidades instaladas (Prácticas e impulsadas)", total: 4, advance: 3, pct: "75%", done: 1, build: 2, pend: 1 }
+                ],
+                despliegue: [
+                    { title: "KR estratégicos con criterios de medición definidos", total: 3, advance: 1, pct: "33%" },
+                    { title: "KR de Gerencia alineados y con metas trimestrales", total: 73, advance: 40, pct: "55%" },
+                    { title: "Automatizaciones implementadas para liberar tiempo", total: 2, advance: 0, pct: "0%" }
+                ],
+                evidencias: [
+                    { name: "Tiempo liberado para actividades de valor o innovación (Horas)", sem: 0, acum: 0, tend: "→" },
+                    { name: "Revisión trimestral estratégica ejecutada (Fines Junio)", sem: 0, acum: 0, tend: "→" }
+                ],
+                senales: [
+                    { name: "Involucramiento Gerencia General", status: "En consolidación", color: "amber" },
+                    { name: "Involucramiento Gerencias", status: "En consolidación", color: "amber" },
+                    { name: "Tribus y Comités sesionando en cadencia", status: "Alto/ Favorable", color: "green" },
+                    { name: "Claridad estratégica en equipos y áreas", status: "En consolidación", color: "amber" },
+                    { name: "Apertura organizacional al enfoque ambidiestral", status: "Bajo / Requiere atención", color: "red" }
+                ],
+                hallazgos: [
+                    "Primeras sesiones de mapeo y alineamiento con mandos medios evidencian expectativas dispares que requieren homologación.",
+                    "Se identificó la necesidad de incorporar formalmente a la Gerencia de Marketing en los comités para viabilizar el plan de despliegue interno.",
+                    "Sponsors de transformación denotan alto interés, pero solicitan mayor claridad en el gobierno del modelo."
+                ],
+                riesgos: [
+                    "Disponibilidad limitada de agendas gerenciales debido al cierre de planificación del trimestre de invierno.",
+                    "Alta dependencia de consultoría externa para la facilitación inicial, arriesgando adopción autónoma temprana.",
+                    "Resistencia pasiva identificada en una de las tres tribus principales por aparente sobrecarga operativa."
+                ],
+                aprendizajes: [
+                    "Es crítico asegurar una sesión de kick-off con la GG antes de profundizar en las capas de jefaturas.",
+                    "El diseño de entregables tangibles debe simplificarse para acelerar las primeras aprobaciones.",
+                    "El rol del sponsor debe definirse con un framework de accountability explícito desde el inicio."
+                ]
+            },
+            w2: {
+                generalProgress: "80%",
+                activacion: [
+                    { name: "Sesiones de alineamiento estratégico con gerencias", sem: 1, acum: 21, tend: "↑" },
+                    { name: "Sesiones del Comité de transformación", sem: 2, acum: 7, tend: "↑" },
+                    { name: "Acompañamientos a sesiones de tribus", sem: 2, acum: 9, tend: "↑" },
+                    { name: "Otras sesiones de articulación", sem: 2, acum: 29, tend: "↑" },
+                    { name: "Gerencias involucradas durante la semana", sem: 5, acum: 9, tend: "→" },
+                    { name: "Workshops/talleres realizados", sem: 0, acum: 1, tend: "→" },
+                    { name: "Personas involucradas en sesiones de trabajo", sem: 12, acum: 49, tend: "→" }
+                ],
+                instalacion: [
+                    { title: "Entregables concretos (Elementos tangibles desarrollados)", total: 8, advance: 5, pct: "63%", done: 0, build: 5, pend: 3 },
+                    { title: "Capacidades instaladas (Prácticas e impulsadas)", total: 4, advance: 4, pct: "100%", done: 2, build: 2, pend: 0 }
+                ],
+                despliegue: [
+                    { title: "KR estratégicos con criterios de medición definidos", total: 3, advance: 1, pct: "33%" },
+                    { title: "KR de Gerencia alineados y con metas trimestrales", total: 73, advance: 49, pct: "67%" },
+                    { title: "Automatizaciones implementadas para liberar tiempo", total: 2, advance: 0, pct: "0%" }
+                ],
+                evidencias: [
+                    { name: "Tiempo liberado para actividades de valor o innovación (Horas)", sem: 0, acum: 0, tend: "→" },
+                    { name: "Revisión trimestral estratégica ejecutada (Fines Junio)", sem: 0, acum: 0, tend: "→" }
+                ],
+                senales: [
+                    { name: "Involucramiento Gerencia General", status: "En consolidación", color: "amber" },
+                    { name: "Involucramiento Gerencias", status: "Alto/ Favorable", color: "green" },
+                    { name: "Tribus y Comités sesionando en cadencia", status: "Alto/ Favorable", color: "green" },
+                    { name: "Claridad estratégica en equipos y áreas", status: "En consolidación", color: "amber" },
+                    { name: "Apertura organizacional al enfoque ambidiestral", status: "En consolidación", color: "amber" }
+                ],
+                hallazgos: [
+                    "Se realizó una sesión de alineamiento con Gerencia General, permitiendo clarificar expectativas respecto a la visión estratégica de ADEX y reforzar el entendimiento.",
+                    "Se formalizó la participación de la Gerente de Marketing, Comercial y Comunicación como sponsor del Comité de Transformación, fortaleciendo la legitimidad.",
+                    "El Comité de Transformación mostró una recepción favorable ante la incorporación de un sponsor con mayor presencia y capacidad de influencia."
+                ],
+                riesgos: [
+                    "Aunque se observan avances iniciales en la disciplina operativa de las tribus (2 de 3 tribus sesionando), aún persisten desafíos para consolidar un ritmo.",
+                    "Se mantienen oportunidades para fortalecer liderazgo, autonomía y capacidad de decisión dentro de comités y tribus, reduciendo la expectativa de direccionamiento externo.",
+                    "Las diferencias de madurez y proactividad entre equipos continúan generando velocidades distintas de adopción del modelo transformacional."
+                ],
+                aprendizajes: [
+                    "La participación visible y activa de sponsors con legitimidad organizacional genera un efecto acelerador sobre la alineación y toma de decisiones.",
+                    "El fortalecimiento metodológico debe complementarse con acciones orientadas al desarrollo de liderazgo, accountability y gestión autónoma.",
+                    "Para consolidar la sostenibilidad, el acompañamiento debe evolucionar progresivamente desde la facilitación directa hacia el protagonismo de los equipos."
+                ]
+            }
+        };
+
+        // DOM Rendering Engine
+        function updateDashboard(weekKey) {
+            const data = dataset[weekKey];
+            
+            // 1. Main Header Profile KPI
+            document.getElementById('generalProgressFill').style.width = data.generalProgress;
+            document.getElementById('generalProgressText').innerText = data.generalProgress;
+
+            // 2. Section 1 Table
+            let htmlActivacion = "";
+            data.activacion.forEach(item => {
+                let tendClass = item.tend === "↑" ? "up" : item.tend === "↓" ? "down" : "side";
+                htmlActivacion += `<tr>
+                    <td>${item.name}</td>
+                    <td class="num">${item.sem}</td>
+                    <td class="num">${item.acum}</td>
+                    <td class="trend ${tendClass}">${item.tend}</td>
+                </tr>`;
+            });
+            document.getElementById('tableActivacion').innerHTML = htmlActivacion;
+
+            // 3. Section 2 - Instalación de Modelo (With Interactive Hover Tooltips)
+            let htmlInstalacion = "";
+            data.instalacion.forEach(item => {
+                htmlInstalacion += `<div class="progress-row tooltip-container">
+                    <div class="progress-row-header">
+                        <div class="progress-row-title">${item.title}</div>
+                        <div class="progress-row-vals">${item.advance} de ${item.total} (${item.pct})</div>
+                    </div>
+                    <div class="mini-track">
+                        <div class="mini-fill" style="width: ${item.pct};"></div>
+                    </div>
+                    <div class="custom-tooltip">
+                        Culminados: ${item.done} | En construcción: ${item.build} | Pendientes: ${item.pend}
+                    </div>
+                </div>`;
+            });
+            document.getElementById('blockInstalacion').innerHTML = htmlInstalacion;
+
+            // 4. Section 2 - Despliegue Estratégico
+            let htmlDespliegue = "";
+            data.despliegue.forEach(item => {
+                htmlDespliegue += `<div class="progress-row">
+                    <div class="progress-row-header">
+                        <div class="progress-row-title">${item.title}</div>
+                        <div class="progress-row-vals">${item.advance}/${item.total} (${item.pct})</div>
+                    </div>
+                    <div class="mini-track">
+                        <div class="mini-fill" style="width: ${item.pct};"></div>
+                    </div>
+                </div>`;
+            });
+            document.getElementById('blockDespliegue').innerHTML = htmlDespliegue;
+
+            // 5. Section 3 Table
+            let htmlEvidencias = "";
+            data.evidencias.forEach(item => {
+                let tendClass = item.tend === "↑" ? "up" : item.tend === "↓" ? "down" : "side";
+                htmlEvidencias += `<tr>
+                    <td>${item.name}</td>
+                    <td class="num">${item.sem}</td>
+                    <td class="num">${item.acum}</td>
+                    <td class="trend ${tendClass}">${item.tend}</td>
+                </tr>`;
+            });
+            document.getElementById('tableEvidencias').innerHTML = htmlEvidencias;
+
+            // 6. Section 3 - Señales Ejecutivas
+            let htmlSenales = "";
+            data.senales.forEach(item => {
+                htmlSenales += `<div class="signal-row">
+                    <div class="signal-light-cell"><span class="light-dot ${item.color}"></span></div>
+                    <div class="signal-text-cell">${item.name}</div>
+                    <div class="signal-status-cell">${item.status}</div>
+                </div>`;
+            });
+            document.getElementById('blockSeñales').innerHTML = htmlSenales;
+
+            // 7. Bottom Insights
+            document.getElementById('listHallazgos').innerHTML = data.hallazgos.map(li => `<li>${li}</li>`).join('');
+            document.getElementById('listRiesgos').innerHTML = data.riesgos.map(li => `<li>${li}</li>`).join('');
+            document.getElementById('listAprendizajes').innerHTML = data.aprendizajes.map(li => `<li>${li}</li>`).join('');
+        }
+
+        // Initialize dashboard on modern week view default
+        updateDashboard('w2');
+    </script>
+</body>
+</html>
